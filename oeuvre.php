@@ -1,39 +1,31 @@
 <?php
 require 'header.php';
-require 'oeuvres.php';
+require 'bdd.php';
+$database_connection = connectToDatabase();
 
-
-// Si l'URL ne contient pas d'id, on redirige sur la page d'accueil
 if (empty($_GET['id'])) {
     header('Location: index.php');
 }
 
-$oeuvre = null;
+$sqlQuery = 'SELECT * FROM oeuvres WHERE id = ?';
+$artWorkStatement = $database_connection->prepare($sqlQuery);
+$artWorkStatement->execute([$_GET['id']]);
+$artWork = $artWorkStatement->fetch();
 
-// On parcourt les oeuvres du tableau afin de rechercher celle qui a l'id précisé dans l'URL
-foreach ($oeuvres as $o) {
-    // intval permet de transformer l'id de l'URL en un nombre (exemple : "2" devient 2)
-    if ($o['id'] === intval($_GET['id'])) {
-        $oeuvre = $o;
-        break; // On stoppe le foreach si on a trouvé l'oeuvre
-    }
-}
-
-// Si aucune oeuvre trouvé, on redirige vers la page d'accueil
-if (is_null($oeuvre)) {
+if (is_null($artWork)) {
     header('Location: index.php');
 }
 ?>
 
 <article id="detail-oeuvre">
     <div id="img-oeuvre">
-        <img src="<?= $oeuvre['image'] ?>" alt="<?= $oeuvre['titre'] ?>">
+        <img src="<?= $artWork['image'] ?>" alt="<?= $artWork['titre'] ?>">
     </div>
     <div id="contenu-oeuvre">
-        <h1><?= $oeuvre['titre'] ?></h1>
-        <p class="description"><?= $oeuvre['artiste'] ?></p>
+        <h1><?= $artWork['titre'] ?></h1>
+        <p class="description"><?= $artWork['artiste'] ?></p>
         <p class="description-complete">
-            <?= $oeuvre['description'] ?>
+            <?= $artWork['description'] ?>
         </p>
     </div>
 </article>
