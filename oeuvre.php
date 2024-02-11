@@ -1,14 +1,14 @@
 <?php
 require 'header.php';
 require 'bdd.php';
-$database_connection = connectToDatabase();
+$db = connectToDatabase();
 
 if (empty($_GET['id'])) {
     header('Location: index.php');
 }
 
 $sqlQuery = 'SELECT * FROM oeuvres WHERE id = ?';
-$artWorkStatement = $database_connection->prepare($sqlQuery);
+$artWorkStatement = $db->prepare($sqlQuery);
 $artWorkStatement->execute([$_GET['id']]);
 $artWork = $artWorkStatement->fetch();
 

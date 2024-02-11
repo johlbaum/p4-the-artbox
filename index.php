@@ -2,8 +2,8 @@
 require 'header.php';
 require 'bdd.php';
 
-$database_connection = connectToDatabase();
-$artWorks = $database_connection->query('SELECT * FROM oeuvres');
+$db = connectToDatabase();
+$artWorks = $db->query('SELECT * FROM oeuvres');
 ?>
 
 <div id="liste-oeuvres">
